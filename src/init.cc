@@ -109,6 +109,24 @@ ncclResult_t ncclGetUniqueId(ncclUniqueId* out) {
   return res;
 }
 
+NCCL_API(ncclResult_t, ncclInitRoot);
+ncclResult_t ncclInitRoot() {
+  NCCLCHECK(ncclInit());
+  return ncclSuccess;
+}
+
+NCCL_API(ncclResult_t, ncclGetUniqueIdFromEnv, ncclUniqueId* out);
+ncclResult_t ncclGetUniqueIdFromEnv(ncclUniqueId* out) {
+  NCCLCHECK(PtrCheck(out, "GetUniqueIdFromEnv", "out"));
+
+  char* env = getenv("NCCL_COMM_ID");
+  NCCLCHECK(PtrCheck(env, "GetUniqueIdFromEnv", "NCCL_COMM_ID"));
+
+  ncclResult_t res = bootstrapGetUniqueId(out);
+  TRACE_CALL("ncclGetUniqueIdFromEnv(0x%llx)", (unsigned long long)hashUniqueId(*out));
+  return res;
+}
+
 // Prevent compiler from optimizing out these operations
 #ifdef __clang__
 #define NCCL_NO_OPTIMIZE __attribute__((optnone))

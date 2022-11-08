@@ -75,6 +75,14 @@ ncclResult_t pncclGetVersion(int *version);
 ncclResult_t  ncclGetUniqueId(ncclUniqueId* uniqueId);
 ncclResult_t pncclGetUniqueId(ncclUniqueId* uniqueId);
 
+/* Initialize the networking for the root proc. It should be called by th root
+ * proc only. */
+ncclResult_t ncclInitRoot();
+
+/* Generate the uniqueId from the NCCL_COMM_ID environmental variable assuming
+ * that the same value is used for all processed. */
+ncclResult_t ncclGetUniqueIdFromEnv(ncclUniqueId* out);
+
 /* Create a new communicator (multi thread/process version) with a configuration
  * set by users. */
 ncclResult_t  ncclCommInitRankConfig(ncclComm_t* comm, int nranks, ncclUniqueId commId, int rank, ncclConfig_t* config);
